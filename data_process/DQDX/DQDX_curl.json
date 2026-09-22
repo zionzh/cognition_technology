@@ -1,0 +1,25 @@
+curl --request POST \
+  --url http://10.106.57.167:9200/biz_data_post_rz/_search \
+  --header 'Authorization: Basic YV91c2VyOjEyM2V3cVEh' \
+  --header 'content-type: application/json' \
+  --data '{
+    "size": 1000,
+	"sort": [
+		{
+			"gather_time": {
+				"order": "desc"
+			}
+		}
+	],
+	"query": {
+		"bool": {
+			"must_not": [
+				{
+					"match": {
+						"site_name": "手动录入"
+					}
+				}
+			]
+		}
+	}
+}'

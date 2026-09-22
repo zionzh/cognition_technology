@@ -1,0 +1,6 @@
+torch>=2.6,<3
+transformers==4.57.6
+peft==0.18.1
+scikit-learn>=1.5,<2
+safetensors>=0.4.3
+tqdm>=4.66
