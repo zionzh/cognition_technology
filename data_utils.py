@@ -4,6 +4,30 @@ import json
 from pathlib import Path
 
 
+def build_text(row):
+    """Compose article fields; retain text-only input for saved splits/legacy data."""
+    if not isinstance(row, dict):
+        raise ValueError("数据必须是一个对象")
+    if "title" in row or "content" in row:
+        parts = []
+        for field in ("title", "content"):
+            value = row.get(field)
+            if value is None:
+                continue
+            if not isinstance(value, str):
+                raise ValueError(f"{field} 必须是字符串或 null")
+            value = value.strip()
+            if value:
+                parts.append(f"{field}: {value}")
+        if not parts:
+            raise ValueError("title 和 content 不能同时为空")
+        return "\n".join(parts)
+    text = row.get("text")
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("需要非空 title/content，或兼容格式的非空字符串 text")
+    return text.strip()
+
+
 def read_rows(path, labeled=True):
     path = Path(path)
     with path.open(encoding="utf-8-sig", newline="") as f:
@@ -17,9 +41,10 @@ def read_rows(path, labeled=True):
         raise ValueError(f"空数据文件: {path}")
     clean, seen = [], {}
     for i, row in enumerate(rows, 1):
-        if not isinstance(row, dict) or not isinstance(row.get("text"), str) or not row["text"].strip():
-            raise ValueError(f"{path}: 第 {i} 条缺少非空字符串 text")
-        item = {"text": row["text"].strip()}
+        try:
+            item = {"text": build_text(row)}
+        except ValueError as exc:
+            raise ValueError(f"{path}: 第 {i} 条: {exc}") from exc
         if labeled:
             label = row.get("label")
             if isinstance(label, bool) or not isinstance(label, (str, int)) or not str(label).strip():

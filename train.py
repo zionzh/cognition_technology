@@ -38,7 +38,7 @@ def evaluate(model, loader, device, labels):
 def parse_args():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--model", default="./harrier-oss-v1-0.6b")
-    p.add_argument("--train", required=True)
+    p.add_argument("--train", default="data/train.jsonl")
     p.add_argument("--valid")
     p.add_argument("--test")
     p.add_argument("--output", default="outputs/harrier_classifier")

@@ -22,13 +22,24 @@ python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 
 ## 2. 准备标注数据
 
-支持 UTF-8 JSONL（每行一个对象）或 CSV（包含 `text,label` 表头）。标签可用字符串或整数，内部统一成字符串：
+支持 UTF-8 JSONL（每行一个对象）或 CSV（包含 `title,content,label` 表头）。训练、验证、测试文件采用相同格式。标签可用字符串或整数，内部统一成字符串：
 
 ```json
-{"text":"球队赢得了决赛冠军","label":"体育"}
-{"text":"新款手机采用了新的芯片","label":"科技"}
-{"text":"今天学习如何制作蛋糕","label":"美食"}
+{"id":"1","title":"球队夺冠","content":"球队赢得了决赛冠军。","label":"体育"}
+{"id":"2","title":"新款手机发布","content":"新款手机采用了新的芯片。","label":"科技"}
+{"id":"3","title":"蛋糕制作教程","content":"今天学习如何制作蛋糕。","label":"美食"}
 ```
+
+读取时只使用标题和正文构造模型的 `text`，`id` 和 `label` 不会拼入文本。例如第一条转换为：
+
+```text
+title: 球队夺冠
+content: 球队赢得了决赛冠军。
+```
+
+标题和正文去除首尾空白，中间换行保留；某字段缺失、为 `null` 或只有空白时，跳过该字段及其提示，两个字段都为空则报错。非空字段必须是字符串。若数据同时带有旧 `text` 字段，优先使用 `title/content`，不会用旧 `text` 替代空标题和空正文。完全不含 `title/content` 的数据仍兼容原来的 `text,label` 格式，以便读取旧数据、示例和保存的划分文件。
+
+分类分支在拼接文本前添加任务指令；原始 Harrier embedding 分支使用同一份 `title: ...\ncontent: ...` 文本，但不添加分类指令。分词阶段继续按 `--max-length` 截断，默认 512 tokens；分类分支的上限包含指令和字段提示。
 
 训练集至少包含两类。默认按类别分层划分 20% 验证集，需要每类有足够样本；也可自行提供 `--valid`。未知标签、冲突标签、跨集合重复文本会报错；集合内部同标签重复文本会去重。同一用户、文档或同源改写的样本应在数据准备阶段按组划分，程序只能检测完全相同的文本。
 
@@ -83,7 +94,7 @@ python predict.py --checkpoint outputs/lora_v1/best --text "这支球队赢得�
 python predict.py --checkpoint outputs/lora_v1/best --input data/predict.jsonl --output outputs/predictions.jsonl
 ```
 
-预测文件只需 `text` 字段。每条结果同时输出 LoRA 分类结果（`label`、`score`、`probabilities`）和原始 Harrier 向量（`embedding`）。原始向量使用不带分类指令的文本，并在临时关闭 LoRA adapter 后计算；它经过末位 token 池化和 L2 归一化，维度为 1024。LoRA 调整后的中间向量只在模型内部用于分类，不对外返回。一次预测需要执行两次 backbone forward，因此该预测接口只接受 LoRA checkpoint。分类概率未做校准。移动 LoRA 模型到另一台机器后，使用 `--base-model /new/path/harrier-oss-v1-0.6b` 指定原始基座路径；基座必须与训练时一致。
+预测文件使用与训练相同的 `title/content` 字段，无需 `label`，也兼容旧 `text` 格式。新闻数据建议通过 `--input` 传入文件；`--text` 直接接收已拼接好的文本，不会自动添加字段提示。每条结果的 `text` 是拼接后的文本，同时输出 LoRA 分类结果（`label`、`score`、`probabilities`）和原始 Harrier 向量（`embedding`）。原始向量使用不带分类指令的拼接文本，并在临时关闭 LoRA adapter 后计算；它经过末位 token 池化和 L2 归一化，维度为 1024。LoRA 调整后的中间向量只在模型内部用于分类，不对外返回。一次预测需要执行两次 backbone forward，因此该预测接口只接受 LoRA checkpoint。分类概率未做校准。移动 LoRA 模型到另一台机器后，使用 `--base-model /new/path/harrier-oss-v1-0.6b` 指定原始基座路径；基座必须与训练时一致。
 
 ## 5. 保存内容与验证
 
