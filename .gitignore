@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model files / local models
+harrier-oss-v1-0.6b/
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Training outputs
+outputs/
+checkpoints/
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
