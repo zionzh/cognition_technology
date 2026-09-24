@@ -1,12 +1,13 @@
 """Predict using a saved classifier (labels and instruction restored automatically)."""
 import argparse
 import json
+import warnings
 from pathlib import Path
 
 import torch
 from torch.utils.data import DataLoader
 
-from data_utils import read_rows
+from data_utils import TEXT_NORMALIZATION, build_text, read_rows
 from harrier_classifier import Collator, load_bundle
 
 
@@ -15,7 +16,7 @@ def main():
     p.add_argument("--checkpoint", default="outputs/harrier_classifier/best")
     source = p.add_mutually_exclusive_group()
     source.add_argument("--text", nargs="+", help="Preformatted text; for articles use --input with title/content")
-    source.add_argument("--input",  default="data/test.jsonl", help="JSONL/CSV containing title/content (legacy text also supported)")
+    source.add_argument("--input", help="JSONL/CSV containing title/content (default: data/test.jsonl)")
     p.add_argument("--output",  default="outputs/test_predictions.jsonl", help="Optional JSONL output")
     p.add_argument("--base-model", help="Override original model location for a LoRA checkpoint")
     p.add_argument("--batch-size", type=int, default=8)
@@ -23,7 +24,8 @@ def main():
     args = p.parse_args()
     if args.batch_size < 1:
         p.error("batch-size 必须大于零")
-    rows = read_rows(args.input, labeled=False) if args.input else [{"text": t.strip()} for t in args.text]
+    rows = ([{"text": build_text({"text": t})} for t in args.text] if args.text is not None
+            else read_rows(args.input or "data/test.jsonl", labeled=False))
     if any(not r["text"] for r in rows):
         p.error("text 不能为空")
     if args.output and Path(args.output).exists():
@@ -31,6 +33,8 @@ def main():
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available()
                           else "cpu" if args.device == "auto" else args.device)
     model, tokenizer, config = load_bundle(args.checkpoint, device, args.base_model)
+    if config.get("text_normalization") != TEXT_NORMALIZATION:
+        warnings.warn("此 checkpoint 未记录当前换行规范。当前输入会合并空行；正式预测请使用重新训练的模型。")
     if config["mode"] != "lora":
         p.error("该预测接口需要 LoRA checkpoint，以便同时输出原始 Harrier embedding")
     adapted_collator = Collator(tokenizer, config["max_length"], config["instruction"])

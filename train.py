@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 from transformers import get_cosine_schedule_with_warmup, set_seed
 
-from data_utils import read_rows, validate_splits
+from data_utils import TEXT_NORMALIZATION, read_rows, validate_splits
 from harrier_classifier import Collator, new_model, save_bundle, tokenizer_from, load_bundle
 
 
@@ -27,7 +27,9 @@ def evaluate(model, loader, device, labels):
             truth.extend(targets.cpu().tolist())
             predicted.extend(logits.argmax(-1).cpu().tolist())
     ids = list(range(len(labels)))
-    return {"loss": loss_sum / len(truth), "accuracy": accuracy_score(truth, predicted),
+    return {"labels": labels, "sample_count": len(truth),
+            "prediction_counts": {label: predicted.count(i) for i, label in enumerate(labels)},
+            "loss": loss_sum / len(truth), "accuracy": accuracy_score(truth, predicted),
             "macro_f1": f1_score(truth, predicted, labels=ids, average="macro", zero_division=0),
             "weighted_f1": f1_score(truth, predicted, labels=ids, average="weighted", zero_division=0),
             "report": classification_report(truth, predicted, labels=ids, target_names=labels,
@@ -126,7 +128,8 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     base_model = str(Path(args.model).resolve()) if Path(args.model).exists() else args.model
     metadata = {"base_model": base_model, "mode": args.mode, "labels": labels,
-                "max_length": args.max_length, "instruction": args.instruction, "dropout": args.dropout}
+                "max_length": args.max_length, "instruction": args.instruction, "dropout": args.dropout,
+                "text_normalization": TEXT_NORMALIZATION}
     (output / "run_config.json").write_text(json.dumps(vars(args), ensure_ascii=False, indent=2), encoding="utf-8")
     # Store actual split membership for reproducibility, including auto-split results.
     for name, data in [("train", train), ("valid", valid), ("test", test)]:

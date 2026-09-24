@@ -1,0 +1,12 @@
+{
+  "base_model": "/mnt/cognitive_classification/harrier-oss-v1-0.6b",
+  "mode": "lora",
+  "labels": [
+    "无用",
+    "有用"
+  ],
+  "max_length": 5000,
+  "instruction": "Classify the text into the appropriate category.",
+  "dropout": 0.1,
+  "best_epoch": 2
+}

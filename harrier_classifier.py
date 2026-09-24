@@ -8,6 +8,7 @@ from torch.nn import functional as F
 from transformers import AutoModel, AutoTokenizer
 from peft import LoraConfig, PeftModel, TaskType, get_peft_model
 from safetensors.torch import load_file, save_file
+from data_utils import normalize_text
 
 
 def last_token_pool(hidden, mask):
@@ -56,8 +57,9 @@ class Collator:
         self.instruction, self.label2id = instruction, label2id
 
     def __call__(self, rows):
-        texts = [f'Instruct: {self.instruction}\nQuery: {r["text"]}'
-                 if self.instruction else r["text"] for r in rows]
+        texts = [normalize_text(r["text"]) for r in rows]
+        if self.instruction:
+            texts = [f'Instruct: {self.instruction}\nQuery: {text}' for text in texts]
         inputs = self.tokenizer(texts, padding=True, truncation=True,
                                 max_length=self.max_length, return_tensors="pt",
                                 return_token_type_ids=False)

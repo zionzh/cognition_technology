@@ -37,7 +37,7 @@ title: 球队夺冠
 content: 球队赢得了决赛冠军。
 ```
 
-标题和正文去除首尾空白，中间换行保留；某字段缺失、为 `null` 或只有空白时，跳过该字段及其提示，两个字段都为空则报错。非空字段必须是字符串。若数据同时带有旧 `text` 字段，优先使用 `title/content`，不会用旧 `text` 替代空标题和空正文。完全不含 `title/content` 的数据仍兼容原来的 `text,label` 格式，以便读取旧数据、示例和保存的划分文件。
+标题和正文去除首尾空白，统一 CRLF/CR 为 LF，并删除空白行（包括只有空格、制表符的行），所以连续换行统一为一个换行。该规则同时适用于训练、验证、测试、文件预测和 `--text` 预测，避免模型利用段落空行数判断标签。某字段缺失、为 `null` 或只有空白时，跳过该字段及其提示，两个字段都为空则报错。非空字段必须是字符串。若数据同时带有旧 `text` 字段，优先使用 `title/content`，不会用旧 `text` 替代空标题和空正文。完全不含 `title/content` 的数据仍兼容原来的 `text,label` 格式，以便读取旧数据、示例和保存的划分文件。
 
 分类分支在拼接文本前添加任务指令；原始 Harrier embedding 分支使用同一份 `title: ...\ncontent: ...` 文本，但不添加分类指令。分词阶段继续按 `--max-length` 截断，默认 512 tokens；分类分支的上限包含指令和字段提示。
 
@@ -46,6 +46,27 @@ content: 球队赢得了决赛冠军。
 `examples/train.jsonl` 是 18 条演示数据，仅用于检查流程，不能用于判断实际分类效果。
 
 ## 3. 开始训练
+
+针对空行格式问题重新训练：在已安装依赖的训练环境中，直接 Run `retrain_normalized.py`，或执行：
+
+```bash
+python retrain_normalized.py
+```
+
+该入口使用项目根目录下的原始 `harrier-oss-v1-0.6b`，重新创建 LoRA 和分类头，使用 `data/train.jsonl` 和 `data/test.jsonl`。它保留原始数据及旧实验，生成新的 `outputs/normalized_时间戳/`，先统一换行并去重，从训练副本中排除与测试集完全相同的规范化文本；跨集合标签冲突会报错。然后按固定种子分层划分训练/验证集，训练结束后自动加载最佳模型评估测试集。除数据处理外，保持先前的主要配置：max-length=5000、batch-size=1、grad-accum=32、epochs=5、LoRA lr=2e-4、head lr=1e-3。可用同名参数调整长度、批大小、累积次数和轮数。
+
+```text
+outputs/normalized_时间戳/
+  data/train.jsonl             # 规范化并排除测试重叠后的训练候选数据
+  data/test.jsonl              # 规范化的测试数据
+  data/preparation_report.json # 来源文件哈希、排除记录、类别数量
+  training_command.json       # 此次训练命令参数
+  training/best/              # 新分类模型；包含 text_normalization 版本
+  training/history.json       # 训练与验证记录
+  training/test_metrics.json  # 测试准确率、F1、混淆矩阵及预测类别计数
+```
+
+只准备数据而不训练，可运行 `python retrain_normalized.py --prepare-only`；这一步不依赖 PyTorch。正式训练仍需在有训练依赖的环境运行。预测新模型时，通过 `--checkpoint outputs/normalized_时间戳/training/best` 指定它，并使用新输出文件名。旧模型没有学习新的数据格式，仅清洗预测输入并不能替代重新训练。规范化只消除已发现的空行特征，不保证新的测试准确率，仍需核对标注与数据来源差异。
 
 先用示例检查流程（Windows、Linux 均可执行以下单行命令）：
 

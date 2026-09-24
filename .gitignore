@@ -22,10 +22,10 @@ harrier-oss-v1-0.6b/
 *.pt
 *.pth
 
-# Training outputs
-outputs/
-checkpoints/
-logs/
+# # Training outputs
+# outputs/
+# checkpoints/
+# logs/
 
 # OS files
 .DS_Store

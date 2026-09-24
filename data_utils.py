@@ -4,6 +4,15 @@ import json
 from pathlib import Path
 
 
+TEXT_NORMALIZATION = "collapse_blank_lines_v1"
+
+
+def normalize_text(text):
+    """Use LF line endings and remove blank/whitespace-only lines, idempotently."""
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    return "\n".join(line for line in text.split("\n") if line.strip()).strip()
+
+
 def build_text(row):
     """Compose article fields; retain text-only input for saved splits/legacy data."""
     if not isinstance(row, dict):
@@ -16,7 +25,7 @@ def build_text(row):
                 continue
             if not isinstance(value, str):
                 raise ValueError(f"{field} 必须是字符串或 null")
-            value = value.strip()
+            value = normalize_text(value)
             if value:
                 parts.append(f"{field}: {value}")
         if not parts:
@@ -25,7 +34,7 @@ def build_text(row):
     text = row.get("text")
     if not isinstance(text, str) or not text.strip():
         raise ValueError("需要非空 title/content，或兼容格式的非空字符串 text")
-    return text.strip()
+    return normalize_text(text)
 
 
 def read_rows(path, labeled=True):
