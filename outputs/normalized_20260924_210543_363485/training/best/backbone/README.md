@@ -1,8 +1,8 @@
 ---
-base_model: ./harrier-oss-v1-0.6b
+base_model: /mnt/cognitive_classification/harrier-oss-v1-0.6b
 library_name: peft
 tags:
-- base_model:adapter:./harrier-oss-v1-0.6b
+- base_model:adapter:/mnt/cognitive_classification/harrier-oss-v1-0.6b
 - lora
 - transformers
 ---

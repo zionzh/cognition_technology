@@ -1,0 +1,28 @@
+{
+  "text_normalization": "collapse_blank_lines_v1",
+  "source_train": "/mnt/cognitive_classification/data/train.jsonl",
+  "source_test": "/mnt/cognitive_classification/data/test.jsonl",
+  "source_train_sha256": "73ffbd6f3f4fed9f51fe79543e7010cf4d1dff47509191cbfd4c0a340731fa68",
+  "source_test_sha256": "5ae7eb65ea551a1240a9a9c8b9c42402257c3e292f357ff0e52d427941e69802",
+  "train_count_after_normalization_and_deduplication": 419,
+  "excluded_test_overlap_count": 1,
+  "excluded_test_overlaps": [
+    {
+      "text_sha256": "125d0b2b0968da8b54840715f452e667985218f15e83f16dfea0fab90bbdf565",
+      "preview": "title: House Intel panel: Intel agencies lag on evolving threats\ncontent: WASHINGTON (Gray DC) - The House Permanent Select Committee on Intelligence has releas",
+      "label": "无用"
+    }
+  ],
+  "training_pool_count": 418,
+  "training_pool_label_counts": {
+    "有用": 208,
+    "无用": 210
+  },
+  "test_count": 26,
+  "test_label_counts": {
+    "无用": 13,
+    "有用": 13
+  },
+  "remaining_train_test_overlap": 0,
+  "remaining_blank_line_samples": 0
+}

@@ -8,5 +8,6 @@
   "max_length": 5000,
   "instruction": "Classify the text into the appropriate category.",
   "dropout": 0.1,
+  "text_normalization": "collapse_blank_lines_v1",
   "best_epoch": 2
 }
