@@ -12,11 +12,11 @@ from harrier_classifier import Collator, load_bundle
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--checkpoint", required=True)
-    source = p.add_mutually_exclusive_group(required=True)
+    p.add_argument("--checkpoint", default="outputs/harrier_classifier/best")
+    source = p.add_mutually_exclusive_group()
     source.add_argument("--text", nargs="+", help="Preformatted text; for articles use --input with title/content")
-    source.add_argument("--input", help="JSONL/CSV containing title/content (legacy text also supported)")
-    p.add_argument("--output", help="Optional JSONL output")
+    source.add_argument("--input",  default="data/test.jsonl", help="JSONL/CSV containing title/content (legacy text also supported)")
+    p.add_argument("--output",  default="outputs/test_predictions.jsonl", help="Optional JSONL output")
     p.add_argument("--base-model", help="Override original model location for a LoRA checkpoint")
     p.add_argument("--batch-size", type=int, default=8)
     p.add_argument("--device", choices=["auto", "cuda", "cpu"], default="auto")
