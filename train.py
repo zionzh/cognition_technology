@@ -44,9 +44,9 @@ def parse_args():
     p.add_argument("--output", default="outputs/harrier_classifier")
     p.add_argument("--mode", choices=["lora", "full"], default="lora")
     p.add_argument("--instruction", default="Classify the text into the appropriate category.")
-    p.add_argument("--max-length", type=int, default=512)
-    p.add_argument("--batch-size", type=int, default=4)
-    p.add_argument("--grad-accum", type=int, default=8)
+    p.add_argument("--max-length", type=int, default=5000)
+    p.add_argument("--batch-size", type=int, default=1)
+    p.add_argument("--grad-accum", type=int, default=32)
     p.add_argument("--epochs", type=int, default=5)
     p.add_argument("--lr", type=float, default=None)
     p.add_argument("--head-lr", type=float, default=1e-3)
@@ -148,6 +148,7 @@ def main():
             window_start = (step // args.grad_accum) * args.grad_accum * args.batch_size
             window_samples = min(args.grad_accum * args.batch_size, len(train) - window_start)
             with torch.autocast(device_type=device.type, dtype=amp_dtype, enabled=precision != "fp32"):
+                print("input_ids shape:", tuple(inputs["input_ids"].shape), flush=True)
                 logits = model(**inputs)
                 per_sample = F.cross_entropy(logits.float(), targets, weight=weights, reduction="none")
                 loss = per_sample.sum() / window_samples
