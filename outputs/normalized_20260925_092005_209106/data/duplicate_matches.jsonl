@@ -1,0 +1,14 @@
+{"a": 197, "b": 234, "reason": "same_title"}
+{"a": 120, "b": 274, "reason": "same_title"}
+{"a": 62, "b": 293, "reason": "same_title"}
+{"a": 144, "b": 384, "reason": "same_title"}
+{"a": 77, "b": 422, "reason": "same_title"}
+{"a": 197, "b": 432, "reason": "same_title"}
+{"a": 56, "b": 71, "reason": "same_title"}
+{"a": 97, "b": 135, "reason": "same_title"}
+{"a": 115, "b": 321, "reason": "same_title"}
+{"a": 104, "b": 325, "reason": "same_title"}
+{"a": 197, "b": 391, "reason": "same_title"}
+{"a": 234, "b": 391, "reason": "similar_body", "containment": 1.0, "jaccard": 0.9735}
+{"a": 234, "b": 432, "reason": "similar_body", "containment": 1.0, "jaccard": 1.0}
+{"a": 391, "b": 432, "reason": "similar_body", "containment": 1.0, "jaccard": 0.9735}

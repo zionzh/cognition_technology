@@ -45,9 +45,11 @@ class DataTests(unittest.TestCase):
             validate_splits(read_rows(root / "prepared/train.jsonl"), [], read_rows(root / "prepared/test.jsonl"))
             test[0]["label"] = "B"
             (root / "test.jsonl").write_text("\n".join(json.dumps(r) for r in test), encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "标签冲突"):
-                prepare_data(root / "train.jsonl", root / "test.jsonl", root / "conflict")
-            self.assertFalse((root / "conflict").exists())
+            report = prepare_data(root / "train.jsonl", root / "test.jsonl", root / "conflict")
+            self.assertEqual(report["conflicting_group_count"], 1)
+            self.assertEqual(report["quarantined_train_count"], 1)
+            self.assertEqual(report["test_conflict_count"], 1)
+            self.assertEqual(report["training_pool_count"], 4)
 
     def test_title_content_format_and_precedence(self):
         row = {"id": "123", "title": " 标题 ", "content": " 正文\n第二段 ",

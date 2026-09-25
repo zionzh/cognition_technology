@@ -16,9 +16,12 @@ from data_utils import TEXT_NORMALIZATION, read_rows, validate_splits
 from harrier_classifier import Collator, new_model, save_bundle, tokenizer_from, load_bundle
 
 
-def evaluate(model, loader, device, labels):
+def evaluate(model, loader, device, labels, prediction_path=None, rows=None):
     model.eval()
     truth, predicted, loss_sum = [], [], 0.0
+    probabilities = []
+    if prediction_path is not None and rows is None:
+        raise ValueError("Prediction export requires rows in loader order")
     with torch.inference_mode():
         for inputs, targets in loader:
             targets = targets.to(device)
@@ -26,6 +29,17 @@ def evaluate(model, loader, device, labels):
             loss_sum += F.cross_entropy(logits, targets, reduction="sum").item()
             truth.extend(targets.cpu().tolist())
             predicted.extend(logits.argmax(-1).cpu().tolist())
+            if prediction_path is not None:
+                probabilities.extend(logits.float().softmax(-1).cpu().tolist())
+    if prediction_path is not None:
+        if len(rows) != len(truth):
+            raise ValueError("Prediction count does not match source rows")
+        with Path(prediction_path).open("w", encoding="utf-8") as f:
+            for i, (row, target, pred, probs) in enumerate(zip(rows, truth, predicted, probabilities), 1):
+                record = {"split_row": i, "text": row["text"], "true_label": labels[target],
+                          "predicted_label": labels[pred], "correct": target == pred,
+                          "score": probs[pred], "probabilities": dict(zip(labels, probs))}
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
     ids = list(range(len(labels)))
     return {"labels": labels, "sample_count": len(truth),
             "prediction_counts": {label: predicted.count(i) for i, label in enumerate(labels)},
@@ -187,7 +201,8 @@ def main():
         if device.type == "cuda":
             torch.cuda.empty_cache()
         model, _, _ = load_bundle(output / "best", device)
-        metrics = evaluate(model, loader(test), device, labels)
+        evaluate(model, valid_loader, device, labels, output / "valid_predictions.jsonl", valid)
+        metrics = evaluate(model, loader(test), device, labels, output / "test_predictions.jsonl", test)
         (output / "test_metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"test accuracy={metrics['accuracy']:.4f}, macro_f1={metrics['macro_f1']:.4f}")
     print(f"Best model: {output / 'best'} (valid macro_f1={best:.4f})")
