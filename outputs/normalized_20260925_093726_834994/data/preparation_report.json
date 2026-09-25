@@ -1,0 +1,63 @@
+{
+  "text_normalization": "collapse_blank_lines_v1",
+  "grouping_version": "article_shingles_v1",
+  "grouping_rules": {
+    "same_title_min_chars": 12,
+    "body_min_chars": 200,
+    "shingle_chars": 5,
+    "min_unique_shingles": 100,
+    "containment": 0.9,
+    "jaccard": 0.8,
+    "review_containment": 0.65
+  },
+  "seed": 42,
+  "val_ratio": 0.2,
+  "source_train": "/mnt/cognitive_classification/data/train.jsonl",
+  "source_test": "/mnt/cognitive_classification/data/test.jsonl",
+  "source_train_sha256": "73ffbd6f3f4fed9f51fe79543e7010cf4d1dff47509191cbfd4c0a340731fa68",
+  "source_test_sha256": "5ae7eb65ea551a1240a9a9c8b9c42402257c3e292f357ff0e52d427941e69802",
+  "raw_train_count": 424,
+  "training_pool_count": 410,
+  "training_pool_label_counts": {
+    "有用": 204,
+    "无用": 206
+  },
+  "excluded_test_overlap_count": 4,
+  "excluded_possible_test_overlap_count": 1,
+  "conflicting_group_count": 2,
+  "quarantined_train_count": 4,
+  "test_conflict_count": 0,
+  "duplicate_variants_removed": 6,
+  "test_count": 26,
+  "test_label_counts": {
+    "无用": 13,
+    "有用": 13
+  },
+  "splits": {
+    "train": {
+      "count": 328,
+      "label_counts": {
+        "有用": 163,
+        "无用": 165
+      }
+    },
+    "valid": {
+      "count": 82,
+      "label_counts": {
+        "无用": 41,
+        "有用": 41
+      }
+    },
+    "test": {
+      "count": 26,
+      "label_counts": {
+        "无用": 13,
+        "有用": 13
+      }
+    }
+  },
+  "remaining_detected_group_overlap": 0,
+  "remaining_blank_line_samples": 0,
+  "review_candidate_count": 2,
+  "note": "Test labels are unchanged. Conflicts require human review; lexical grouping cannot detect all paraphrases."
+}
