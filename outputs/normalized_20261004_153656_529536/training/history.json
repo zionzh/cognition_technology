@@ -1,0 +1,282 @@
+[
+  {
+    "epoch": 1,
+    "train_loss": 0.6799592081411385,
+    "valid": {
+      "labels": [
+        "无用",
+        "有用"
+      ],
+      "sample_count": 81,
+      "prediction_counts": {
+        "无用": 34,
+        "有用": 47
+      },
+      "loss": 0.6342299013961981,
+      "accuracy": 0.8765432098765432,
+      "macro_f1": 0.8756142506142506,
+      "weighted_f1": 0.8757469590802924,
+      "report": {
+        "无用": {
+          "precision": 0.9411764705882353,
+          "recall": 0.8,
+          "f1-score": 0.8648648648648649,
+          "support": 40.0
+        },
+        "有用": {
+          "precision": 0.8297872340425532,
+          "recall": 0.9512195121951219,
+          "f1-score": 0.8863636363636364,
+          "support": 41.0
+        },
+        "accuracy": 0.8765432098765432,
+        "macro avg": {
+          "precision": 0.8854818523153942,
+          "recall": 0.875609756097561,
+          "f1-score": 0.8756142506142506,
+          "support": 81.0
+        },
+        "weighted avg": {
+          "precision": 0.8847942644354826,
+          "recall": 0.8765432098765432,
+          "f1-score": 0.8757469590802924,
+          "support": 81.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          32,
+          8
+        ],
+        [
+          2,
+          39
+        ]
+      ]
+    }
+  },
+  {
+    "epoch": 2,
+    "train_loss": 0.5243156622221441,
+    "valid": {
+      "labels": [
+        "无用",
+        "有用"
+      ],
+      "sample_count": 81,
+      "prediction_counts": {
+        "无用": 41,
+        "有用": 40
+      },
+      "loss": 0.37196750184636057,
+      "accuracy": 0.9876543209876543,
+      "macro_f1": 0.9876543209876543,
+      "weighted_f1": 0.9876543209876543,
+      "report": {
+        "无用": {
+          "precision": 0.975609756097561,
+          "recall": 1.0,
+          "f1-score": 0.9876543209876543,
+          "support": 40.0
+        },
+        "有用": {
+          "precision": 1.0,
+          "recall": 0.975609756097561,
+          "f1-score": 0.9876543209876543,
+          "support": 41.0
+        },
+        "accuracy": 0.9876543209876543,
+        "macro avg": {
+          "precision": 0.9878048780487805,
+          "recall": 0.9878048780487805,
+          "f1-score": 0.9876543209876543,
+          "support": 81.0
+        },
+        "weighted avg": {
+          "precision": 0.9879554351099067,
+          "recall": 0.9876543209876543,
+          "f1-score": 0.9876543209876543,
+          "support": 81.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          40,
+          0
+        ],
+        [
+          1,
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "epoch": 3,
+    "train_loss": 0.28422941929764217,
+    "valid": {
+      "labels": [
+        "无用",
+        "有用"
+      ],
+      "sample_count": 81,
+      "prediction_counts": {
+        "无用": 40,
+        "有用": 41
+      },
+      "loss": 0.22721568191493,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0,
+      "report": {
+        "无用": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 40.0
+        },
+        "有用": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 41.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          40,
+          0
+        ],
+        [
+          0,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "epoch": 4,
+    "train_loss": 0.20048850181478042,
+    "valid": {
+      "labels": [
+        "无用",
+        "有用"
+      ],
+      "sample_count": 81,
+      "prediction_counts": {
+        "无用": 40,
+        "有用": 41
+      },
+      "loss": 0.18703033361170027,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0,
+      "report": {
+        "无用": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 40.0
+        },
+        "有用": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 41.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          40,
+          0
+        ],
+        [
+          0,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "epoch": 5,
+    "train_loss": 0.17969998009042976,
+    "valid": {
+      "labels": [
+        "无用",
+        "有用"
+      ],
+      "sample_count": 81,
+      "prediction_counts": {
+        "无用": 40,
+        "有用": 41
+      },
+      "loss": 0.18124500045805803,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0,
+      "report": {
+        "无用": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 40.0
+        },
+        "有用": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 41.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          40,
+          0
+        ],
+        [
+          0,
+          41
+        ]
+      ]
+    }
+  }
+]

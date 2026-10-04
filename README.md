@@ -20,6 +20,15 @@ python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 
 代码支持 CPU，但完整 0.6B 训练较慢。默认使用 FP32 主权重和 GPU 混合精度，支持梯度检查点与梯度累积；不是量化训练，显存占用取决于文本长度和批大小。本实现为单进程、单卡训练，不使用 torchrun。
 
+本机 Tesla V100、驱动 550.127.05（CUDA 12.4）使用以下 PyTorch 构建，自动精度为 FP16：
+
+```bash
+python -m pip install "torch==2.6.0" --index-url https://download.pytorch.org/whl/cu124 --extra-index-url https://pypi.org/simple
+python -c "import torch; from transformers import PreTrainedModel; import peft; print(torch.__version__, torch.cuda.is_available())"
+```
+
+本项目无需 torchvision；如果其导入出现 `operator torchvision::nms does not exist`，可用 `python -m pip uninstall torchvision` 移除。若环境还安装了 torchaudio，应使用与 torch 一致的 2.6.0 CUDA 12.4 构建。避免用 `pip install --upgrade torch` 将此环境升级为驱动不支持的 CUDA 构建。
+
 ## 2. 准备标注数据
 
 支持 UTF-8 JSONL（每行一个对象）或 CSV（包含 `title,content,label` 表头）。训练、验证、测试文件采用相同格式。标签可用字符串或整数，内部统一成字符串：

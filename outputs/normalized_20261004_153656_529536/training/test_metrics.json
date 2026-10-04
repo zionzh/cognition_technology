@@ -1,0 +1,52 @@
+{
+  "labels": [
+    "无用",
+    "有用"
+  ],
+  "sample_count": 193,
+  "prediction_counts": {
+    "无用": 100,
+    "有用": 93
+  },
+  "loss": 0.22006220806756785,
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "weighted_f1": 1.0,
+  "report": {
+    "无用": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "有用": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 93.0
+    },
+    "accuracy": 1.0,
+    "macro avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 193.0
+    },
+    "weighted avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 193.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      100,
+      0
+    ],
+    [
+      0,
+      93
+    ]
+  ]
+}

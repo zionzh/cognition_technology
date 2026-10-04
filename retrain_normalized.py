@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import shlex
+import traceback
 
 from data_preparation import prepare_data
 
@@ -60,8 +62,16 @@ def main():
         import transformers
         import peft
         import sklearn
-    except ImportError as exc:
-        raise SystemExit(f"数据已准备完成，但当前 Python 缺少训练依赖：{exc}。请在原训练环境运行此脚本。") from exc
+    except Exception:
+        # Lazy imports can wrap an incompatible optional dependency as an
+        # ImportError; keep the original traceback so the cause is visible.
+        traceback.print_exc()
+        print(f"训练依赖导入失败。当前 Python：{sys.executable}", file=sys.stderr)
+        print("这可能是缺少依赖或已安装依赖不兼容；请根据上面的完整 traceback 排查。",
+              file=sys.stderr)
+        print("数据已准备完成。修复环境后，可直接运行以下命令继续训练：", file=sys.stderr)
+        print(shlex.join(command), file=sys.stderr)
+        raise SystemExit(1)
     subprocess.run(command, cwd=ROOT, check=True)
     metrics_path = output / "training/test_metrics.json"
     metrics = json.loads(metrics_path.read_text(encoding="utf-8"))

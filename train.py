@@ -108,10 +108,10 @@ def main():
                           else "cpu" if args.device == "auto" else args.device)
     precision = args.precision
     if precision == "auto":
-        precision = ("bf16" if torch.cuda.is_bf16_supported() else "fp16") if device.type == "cuda" else "fp32"
+        precision = ("bf16" if torch.cuda.is_bf16_supported(including_emulation=False) else "fp16") if device.type == "cuda" else "fp32"
     if device.type == "cpu" and precision != "fp32":
         raise ValueError("CPU 模式请使用 --precision fp32")
-    if precision == "bf16" and not torch.cuda.is_bf16_supported():
+    if precision == "bf16" and not torch.cuda.is_bf16_supported(including_emulation=False):
         raise ValueError("当前 GPU 不支持 bf16，请改为 fp16 或 fp32")
     tokenizer = tokenizer_from(args.model)
     collator = Collator(tokenizer, args.max_length, args.instruction, {v: i for i, v in enumerate(labels)})
