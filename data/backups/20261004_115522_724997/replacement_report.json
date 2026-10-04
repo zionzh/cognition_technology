@@ -1,0 +1,38 @@
+{
+  "target": "data/train.jsonl",
+  "source": "data_process/xlsum_subsets/subset_1/subset_1.jsonl",
+  "backup": "data/backups/20261004_115522_724997/train.jsonl",
+  "before_count": 424,
+  "before_label_counts": {
+    "有用": 212,
+    "无用": 212
+  },
+  "removed_count": 212,
+  "added_count": 200,
+  "after_count": 412,
+  "after_label_counts": {
+    "有用": 212,
+    "无用": 200
+  },
+  "exact_duplicate_pairs": [
+    [
+      72,
+      139
+    ],
+    [
+      38,
+      147
+    ],
+    [
+      80,
+      193
+    ],
+    [
+      45,
+      212
+    ]
+  ],
+  "label_conflicts": [],
+  "original_sha256": "73ffbd6f3f4fed9f51fe79543e7010cf4d1dff47509191cbfd4c0a340731fa68",
+  "updated_sha256": "44b85d94c76c6b48a483a3471fa47fbf36af746277521b2b99d8d526ac368baf"
+}

@@ -1,0 +1,25 @@
+{
+  "target": "data/test.jsonl",
+  "positive_source": "data_process/cognitive_warfare_news_200.xlsx",
+  "positive_filter": "label == 1",
+  "negative_source": "data_process/xlsum_subsets/subset_3/subset_3.jsonl",
+  "backup": "data/backups/20261004_120559_205191/test.jsonl",
+  "before_count": 26,
+  "before_label_counts": {
+    "无用": 13,
+    "有用": 13
+  },
+  "excel_total_count": 193,
+  "excel_excluded_count": 100,
+  "after_count": 193,
+  "after_label_counts": {
+    "有用": 93,
+    "无用": 100
+  },
+  "title_only_count": 1,
+  "exact_duplicate_pairs": [],
+  "label_conflicts": [],
+  "original_sha256": "5ae7eb65ea551a1240a9a9c8b9c42402257c3e292f357ff0e52d427941e69802",
+  "updated_sha256": "f18f23461ab310158bb44332c81fcc1f31a1de21433d383111db2c51613abf14",
+  "train_sha256": "44b85d94c76c6b48a483a3471fa47fbf36af746277521b2b99d8d526ac368baf"
+}
